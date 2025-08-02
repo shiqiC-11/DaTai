@@ -1,0 +1,57 @@
+version: "3.9"
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: datai_mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: datai
+      MYSQL_USER: dataiuser
+      MYSQL_PASSWORD: dataipass
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./infra/sql:/docker-entrypoint-initdb.d
+    networks:
+      - datai_net
+
+  adminer:
+    image: adminer
+    container_name: datai_adminer
+    restart: always
+    ports:
+      - "8081:8080"
+    networks:
+      - datai_net
+
+  backend:
+    build:
+      context: ./backend
+    container_name: datai_backend
+    restart: always
+    ports:
+      - "8080:8080"
+    environment:
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_USER: dataiuser
+      DB_PASSWORD: dataipass
+      DB_NAME: datai
+      AUTHING_APP_ID: ${AUTHING_APP_ID}
+      AUTHING_SECRET: ${AUTHING_SECRET}
+    depends_on:
+      - mysql
+    networks:
+      - datai_net
+    volumes:
+      - ./backend:/app
+
+volumes:
+  mysql_data:
+
+networks:
+  datai_net:
+    driver: bridge
