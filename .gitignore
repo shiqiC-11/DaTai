@@ -7,3 +7,16 @@
 
 # sqlc
 db/
+
+
+# Go build
+/bin/
+/*.exe
+/*.test
+*.out
+
+
+# IDEs
+.vscode/
+.idea/
+*.sw?
