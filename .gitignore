@@ -1,1 +1,9 @@
+# env should never be committed
 .env
+
+# editor / system files
+.DS_Store
+*.swp
+
+# sqlc
+db/
