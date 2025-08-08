@@ -10,7 +10,7 @@ import (
 
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/99designs/gqlgen/graphql/introspection"
-	gqlmodel "github.com/shiqi/datai/gql/model"
+	gqlmodel "github.com/shiqi/datai/backend/gql/model"
 	gqlparser "github.com/vektah/gqlparser/v2"
 	"github.com/vektah/gqlparser/v2/ast"
 )
@@ -259,6 +259,7 @@ extend type Mutation {
 input UpsertUserInput {
   uid: String!
   nickname: String
+  avatar: String
 }`, BuiltIn: false},
 }
 var parsedSchema = gqlparser.MustLoadSchema(sources...)

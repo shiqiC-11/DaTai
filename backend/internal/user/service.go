@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/jackc/pgx/v5/pgtype"
-	userdb "github.com/shiqi/datai/db/user"
+	userdb "github.com/shiqi/datai/backend/db/user"
 )
 
 type Service struct {
@@ -43,4 +43,8 @@ func (s *Service) UpsertUser(ctx context.Context, input UpsertUserInput) (*userd
 	}
 	err = s.userRepo.UpsertUser(ctx, newUser)
 	return newUser, err
+}
+
+func (s *Service) GetUserByUID(ctx context.Context, uid string) (*userdb.User, error) {
+	return s.userRepo.GetUserByUID(ctx, uid)
 }

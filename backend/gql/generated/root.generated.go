@@ -10,7 +10,7 @@ import (
 
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/99designs/gqlgen/graphql/introspection"
-	gqlmodel "github.com/shiqi/datai/gql/model"
+	gqlmodel "github.com/shiqi/datai/backend/gql/model"
 	"github.com/vektah/gqlparser/v2/ast"
 )
 
@@ -30,7 +30,7 @@ type QueryResolver interface {
 func (ec *executionContext) field_Mutation_upsertUser_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
-	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "input", ec.unmarshalNUpsertUserInput2githubᚗcomᚋshiqiᚋdataiᚋgqlᚋmodelᚐUpsertUserInput)
+	arg0, err := graphql.ProcessArgField(ctx, rawArgs, "input", ec.unmarshalNUpsertUserInput2githubᚗcomᚋshiqiᚋdataiᚋbackendᚋgqlᚋmodelᚐUpsertUserInput)
 	if err != nil {
 		return nil, err
 	}
@@ -85,7 +85,7 @@ func (ec *executionContext) _Mutation_upsertUser(ctx context.Context, field grap
 	}
 	res := resTmp.(*gqlmodel.User)
 	fc.Result = res
-	return ec.marshalNUser2ᚖgithubᚗcomᚋshiqiᚋdataiᚋgqlᚋmodelᚐUser(ctx, field.Selections, res)
+	return ec.marshalNUser2ᚖgithubᚗcomᚋshiqiᚋdataiᚋbackendᚋgqlᚋmodelᚐUser(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Mutation_upsertUser(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -149,7 +149,7 @@ func (ec *executionContext) _Query_me(ctx context.Context, field graphql.Collect
 	}
 	res := resTmp.(*gqlmodel.User)
 	fc.Result = res
-	return ec.marshalOUser2ᚖgithubᚗcomᚋshiqiᚋdataiᚋgqlᚋmodelᚐUser(ctx, field.Selections, res)
+	return ec.marshalOUser2ᚖgithubᚗcomᚋshiqiᚋdataiᚋbackendᚋgqlᚋmodelᚐUser(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_me(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {

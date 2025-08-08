@@ -9,7 +9,7 @@ import (
 	"sync/atomic"
 
 	"github.com/99designs/gqlgen/graphql"
-	gqlmodel "github.com/shiqi/datai/gql/model"
+	gqlmodel "github.com/shiqi/datai/backend/gql/model"
 	"github.com/vektah/gqlparser/v2/ast"
 )
 
@@ -249,7 +249,7 @@ func (ec *executionContext) unmarshalInputUpsertUserInput(ctx context.Context, o
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"uid", "nickname"}
+	fieldsInOrder := [...]string{"uid", "nickname", "avatar"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -270,6 +270,13 @@ func (ec *executionContext) unmarshalInputUpsertUserInput(ctx context.Context, o
 				return it, err
 			}
 			it.Nickname = data
+		case "avatar":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("avatar"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Avatar = data
 		}
 	}
 
@@ -338,16 +345,16 @@ func (ec *executionContext) _User(ctx context.Context, sel ast.SelectionSet, obj
 
 // region    ***************************** type.gotpl *****************************
 
-func (ec *executionContext) unmarshalNUpsertUserInput2githubᚗcomᚋshiqiᚋdataiᚋgqlᚋmodelᚐUpsertUserInput(ctx context.Context, v any) (gqlmodel.UpsertUserInput, error) {
+func (ec *executionContext) unmarshalNUpsertUserInput2githubᚗcomᚋshiqiᚋdataiᚋbackendᚋgqlᚋmodelᚐUpsertUserInput(ctx context.Context, v any) (gqlmodel.UpsertUserInput, error) {
 	res, err := ec.unmarshalInputUpsertUserInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNUser2githubᚗcomᚋshiqiᚋdataiᚋgqlᚋmodelᚐUser(ctx context.Context, sel ast.SelectionSet, v gqlmodel.User) graphql.Marshaler {
+func (ec *executionContext) marshalNUser2githubᚗcomᚋshiqiᚋdataiᚋbackendᚋgqlᚋmodelᚐUser(ctx context.Context, sel ast.SelectionSet, v gqlmodel.User) graphql.Marshaler {
 	return ec._User(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNUser2ᚖgithubᚗcomᚋshiqiᚋdataiᚋgqlᚋmodelᚐUser(ctx context.Context, sel ast.SelectionSet, v *gqlmodel.User) graphql.Marshaler {
+func (ec *executionContext) marshalNUser2ᚖgithubᚗcomᚋshiqiᚋdataiᚋbackendᚋgqlᚋmodelᚐUser(ctx context.Context, sel ast.SelectionSet, v *gqlmodel.User) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -357,7 +364,7 @@ func (ec *executionContext) marshalNUser2ᚖgithubᚗcomᚋshiqiᚋdataiᚋgql�
 	return ec._User(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalOUser2ᚖgithubᚗcomᚋshiqiᚋdataiᚋgqlᚋmodelᚐUser(ctx context.Context, sel ast.SelectionSet, v *gqlmodel.User) graphql.Marshaler {
+func (ec *executionContext) marshalOUser2ᚖgithubᚗcomᚋshiqiᚋdataiᚋbackendᚋgqlᚋmodelᚐUser(ctx context.Context, sel ast.SelectionSet, v *gqlmodel.User) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
