@@ -17,4 +17,5 @@ extend type Mutation {
 input UpsertUserInput {
   uid: String!
   nickname: String
+  avatar: String
 }

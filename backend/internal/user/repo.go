@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	userdb "github.com/shiqi/datai/db/user" // sqlc 生成的包
+	userdb "github.com/shiqi/datai/backend/db/user" // sqlc 生成的包
 )
 
 type Repository struct {

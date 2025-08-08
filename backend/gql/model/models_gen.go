@@ -11,6 +11,7 @@ type Query struct {
 type UpsertUserInput struct {
 	UID      string  `json:"uid"`
 	Nickname *string `json:"nickname,omitempty"`
+	Avatar   *string `json:"avatar,omitempty"`
 }
 
 type User struct {
