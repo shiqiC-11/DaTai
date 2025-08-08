@@ -1,0 +1,204 @@
+// Project: Datai ER Diagram (Multi-Tenant + Event + Notifications)
+// Database: MySQL + MongoDB (noted)
+
+Project datai {
+database_type: "MySQL"
+}
+
+// === user_db ===
+
+Table users {
+id bigint [pk]
+uid varchar unique
+nickname varchar
+avatar varchar
+gender enum
+birth_year int
+rating_avg decimal
+rating_count int
+created_at datetime
+updated_at datetime
+status int
+email varchar
+phone varchar
+}
+
+Table user_follows {
+follower_id bigint [ref: > users.id]
+followee_id bigint [ref: > users.id]
+created_at datetime
+Note: "Composite PK"
+indexes {
+(follower_id, followee_id) [pk]
+}
+}
+
+Table user_educations {
+id bigint [pk]
+user_id bigint [ref: > users.id]
+school_name varchar
+degree varchar
+major varchar
+is_verified boolean
+}
+
+Table user_employments {
+id bigint [pk]
+user_id bigint [ref: > users.id]
+company_name varchar
+job_title varchar
+is_verified boolean
+}
+
+Table user_certifications {
+id bigint [pk]
+user_id bigint [ref: > users.id]
+cert_type enum
+status enum
+proof text
+reviewer_id bigint [ref: > users.id]
+created_at datetime
+}
+
+// === tenant_db ===
+
+Table tenants {
+id varchar(64) [pk] // e.g., school_1, brand_abc
+name varchar(100)
+region varchar(10)  // e.g., CN, US, EU
+created_at datetime
+}
+
+Table user_tenants {
+user_id bigint [ref: > users.id]
+tenant_id varchar(64) [ref: > tenants.id]
+role varchar(50)
+joined_at datetime
+
+indexes {
+(user_id, tenant_id) [unique]
+}
+}
+
+// === event_db ===
+
+Table events {
+id bigint [pk]
+owner_id bigint
+owner_nickname varchar
+title varchar
+description text
+primary_tag varchar
+secondary_tags json
+start_time datetime
+end_time datetime
+location_type enum
+location_detail text
+cover_image varchar
+require_approval boolean
+participant_limit int
+group_id bigint [ref: > event_groups.id, note: "Each event belongs to at most one group"]
+tenant_id varchar(64) [ref: > tenants.id, note: "nullable; for public events"]
+created_at datetime
+
+indexes {
+(tenant_id)
+}
+}
+
+Table event_participants {
+id bigint [pk]
+event_id bigint [ref: > events.id]
+user_id bigint [ref: > users.id]
+status enum
+joined_at datetime
+left_at datetime
+}
+
+Table event_comments {
+id bigint [pk]
+event_id bigint [ref: > events.id]
+user_id bigint [ref: > users.id]
+user_nickname varchar
+content text
+parent_id bigint [ref: > event_comments.id]
+created_at datetime
+}
+
+Table event_ratings {
+id bigint [pk]
+event_id bigint [ref: > events.id]
+rater_id bigint [ref: > users.id]
+score tinyint
+comment text
+created_at datetime
+}
+
+Table user_ratings {
+id bigint [pk]
+event_id bigint [ref: > events.id]
+rater_id bigint [ref: > users.id]
+target_user_id bigint [ref: > users.id]
+score tinyint [note: "1~5"]
+comment text
+created_at datetime
+}
+
+Table event_groups {
+id bigint [pk]
+name varchar
+owner_id bigint [ref: > users.id]
+description text
+tags json
+pictures json
+is_public boolean
+score_avg decimal [note: "Weighted average of event scores (by participants)"]
+score_updated_at datetime
+created_at datetime
+event_count int
+total_participants int
+rating_count int
+updated_at datetime
+
+}
+
+Table event_group_subscriptions {
+id bigint [pk]
+user_id bigint [ref: > users.id]
+group_id bigint [ref: > event_groups.id]
+created_at datetime
+indexes {
+(user_id, group_id) [unique]
+}
+}
+
+// === log_db ===
+
+Table notifications {
+id bigint [pk]
+user_id bigint [ref: > users.id]
+type varchar
+content text
+is_read boolean
+channel_type enum
+created_at datetime
+}
+
+// === MongoDB note ===
+
+/*
+user_behavior_logs (MongoDB)
+{
+user_id: string,
+event_type: string,
+target_id: string,
+timestamp: ISODate,
+meta: {
+device: string,
+location: string,
+referrer: string
+}
+}
+*/
+
+Ref: "event_comments"."user_id" < "event_group_subscriptions"."user_id"
