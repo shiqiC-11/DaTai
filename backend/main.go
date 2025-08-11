@@ -104,12 +104,13 @@ func main() {
 		UserService: userService,
 	}
 
-	// Authing
+	// Authing 中间件
 	port := getEnv("PORT", "8080")
 	authMiddleware := middleware.NewAuthingMiddleware(
-		getEnv("AUTHING_JWKS_URL", ""),
-		getEnv("AUTHING_APP_ID", ""),
-		getEnv("AUTHING_ISSUER", ""),
+		getEnv("AUTHING_JWKS_URL", "https://qiyu-datai.authing.cn/oidc/.well-known/jwks.json"), // JWKS URL
+		getEnv("AUTHING_AUDIENCE", ""),                                 // Audience (暂时留空)
+		getEnv("AUTHING_ISSUER", "https://qiyu-datai.authing.cn/oidc"), // Issuer (Authing 根域名，不带 /oidc)
+		getEnv("AUTHING_SECRET", ""),                                   // Client Secret
 	)
 
 	// Authing 构建 GraphQL 服务器

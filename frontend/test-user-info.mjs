@@ -62,7 +62,7 @@ async function testUserInfo() {
     console.log(`  后端 URL: ${config.backendUrl}\n`);
 
     // ===== 第一步：获取 Authing 访问令牌 =====
-    console.log('1. 获取 access_token...');
+    console.log('1. 获取 Authing 令牌...');
     
     // 构建 OIDC 端点
     const tokenUrl = `https://${config.domain}/oidc/token`;
@@ -89,24 +89,31 @@ async function testUserInfo() {
       throw new Error(`获取 token 失败: ${errorData}`);
     }
 
-    // 解析响应数据，提取访问令牌
+    // 解析响应数据，提取两种令牌
     const tokenData = await tokenResponse.json();
-    const accessToken = tokenData.access_token;
+    const accessToken = tokenData.access_token;  // 用于调用 Authing API
+    const idToken = tokenData.id_token;          // JWT 格式，用于后端验证
     
     if (!accessToken) {
       throw new Error('响应中没有 access_token');
     }
     
+    if (!idToken) {
+      throw new Error('响应中没有 id_token');
+    }
+    
     console.log('✅ 获取到 access_token');
-    console.log('Token:', accessToken.substring(0, 50) + '...\n');
+    console.log('Access Token:', accessToken.substring(0, 50) + '...');
+    console.log('✅ 获取到 id_token (JWT 格式)');
+    console.log('ID Token:', idToken.substring(0, 50) + '...\n');
 
     // ===== 第二步：验证令牌有效性 =====
     console.log('2. 获取用户信息...');
     
-    // 使用访问令牌从 Authing 获取用户信息
+    // 使用 access_token 从 Authing 获取用户信息
     const userInfoResponse = await fetch(`https://${config.domain}/oidc/me`, {
       headers: {
-        'Authorization': `Bearer ${accessToken}`  // Bearer 令牌认证
+        'Authorization': `Bearer ${accessToken}`  // 使用 access_token
       }
     });
 
@@ -130,12 +137,12 @@ async function testUserInfo() {
     // ===== 第三步：测试后端 GraphQL API =====
     console.log('\n3. 测试后端 GraphQL API...');
     
-    // 使用访问令牌调用我们的后端 GraphQL API
+    // 使用 id_token (JWT 格式) 调用我们的后端 GraphQL API
     const graphqlResponse = await fetch(`${config.backendUrl}/query`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${accessToken}`  // 传递 JWT 令牌
+        'Authorization': `Bearer ${idToken}`  // 传递 JWT 令牌
       },
       body: JSON.stringify({
         query: `
