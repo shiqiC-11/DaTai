@@ -4,6 +4,9 @@
 # editor / system files
 .DS_Store
 *.swp
+*.log
+
+
 
 # sqlc
 db/
@@ -20,3 +23,12 @@ db/
 .vscode/
 .idea/
 *.sw?
+
+
+# 依赖
+node_modules/
+vendor/
+
+# 构建产物
+dist/
+build/

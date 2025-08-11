@@ -1,0 +1,21 @@
+type User {
+  id: ID!
+  uid: String!
+  nickname: String
+  avatar: String
+  createdAt: String
+}
+
+extend type Query {
+  me: User
+}
+
+extend type Mutation {
+  upsertUser(input: UpsertUserInput!): User!
+}
+
+input UpsertUserInput {
+  uid: String!
+  nickname: String
+  avatar: String
+}
