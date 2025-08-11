@@ -379,9 +379,12 @@ docker-compose -f docker-compose.prod.yml up -d
 
 ## 📞 联系方式
 
-- **项目维护者**: [Your Name]
-- **邮箱**: your.email@example.com
-- **项目链接**: https://github.com/your-username/datai
+- **项目维护者**: 11
+- **邮箱**: ...
+
+## Main Contributor
+- kiki-11
+- Cursor and chatGPT :>
 
 ## 🙏 致谢
 
