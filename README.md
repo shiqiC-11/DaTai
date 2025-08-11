@@ -22,9 +22,14 @@ DaTai/
 │   ├── docker-compose.yml    # 数据库容器配置
 │   ├── sqlc.yaml            # SQL代码生成配置
 │   └── gqlgen.yml           # GraphQL代码生成配置
-├── frontend/                  # React前端应用（待创建）
-├── docs/                      # 项目文档
-└── scripts/                   # 工具脚本
+├── frontend/                  # React前端应用
+│   ├── test-username-formats.mjs    # OIDC登录测试
+│   ├── test-authing-api.mjs         # API连通性测试
+│   ├── test-user-info.mjs           # 前后端集成测试
+│   ├── test-with-env.mjs            # 环境变量示例
+│   ├── .env                         # 敏感配置（不提交到Git）
+│   └── .env.example                 # 配置模板
+└── docs/                      # 项目文档
 ```
 
 ## 🚀 快速开始
@@ -72,6 +77,10 @@ cd frontend
 
 # 安装依赖
 npm install
+
+# 配置环境变量
+cp .env.example .env
+# 编辑 .env 文件，填入你的 Authing 配置
 
 # 启动开发服务器
 npm run dev
@@ -142,42 +151,47 @@ docker-compose ps
 3. 获取以下信息：
    - **域名**: `your-domain.authing.cn`
    - **应用ID**: `your-app-id`
-   - **API Identifier**: `your-api-identifier`
+   - **应用密钥**: `your-app-secret`
 
 ### 2. 环境变量配置
 
 ```bash
-cd backend
+cd frontend
 cp .env.example .env
 ```
 
 编辑 `.env` 文件：
 ```env
 # Authing配置
-AUTHING_JWKS_URL=https://your-domain.authing.cn/.well-known/jwks.json
-AUTHING_AUDIENCE=your-api-identifier
-AUTHING_ISSUER=https://your-domain.authing.cn/
+AUTHING_DOMAIN=your-domain.authing.cn
+AUTHING_CLIENT_ID=your-app-id
+AUTHING_CLIENT_SECRET=your-app-secret
 
-# 数据库配置
-DB_USER=dataiuser
-DB_PASSWORD=dataipass
-DB_HOST=localhost
-DB_PORT=5432
+# 测试用户配置
+TEST_USERNAME=your-test-username
+TEST_PASSWORD=your-test-password
 
-# 服务器配置
-PORT=8080
+# 后端API配置
+BACKEND_URL=http://localhost:8080
 ```
 
 ### 3. 测试 Authing 集成
 
 ```bash
-# 使用 Node.js 测试脚本
-cd scripts
-node test-authing.js
+# 进入前端目录
+cd frontend
 
-# 使用 curl 测试
-cd scripts
-./test-curl.sh
+# 测试用户名格式（找到正确的登录方式）
+node test-username-formats.mjs
+
+# 测试 Authing API 连通性
+node test-authing-api.mjs
+
+# 测试完整的前后端集成
+node test-user-info.mjs
+
+# 测试环境变量配置
+node test-with-env.mjs
 ```
 
 ## 📚 API 文档
@@ -272,7 +286,9 @@ frontend/
 │   ├── utils/            # 工具函数
 │   └── App.js            # 主应用组件
 ├── public/               # 静态资源
-└── tests/                # 测试文件
+├── tests/                # 测试文件
+├── .env                  # 环境变量配置
+└── .env.example          # 配置模板
 ```
 
 ## 🧪 测试
@@ -296,14 +312,25 @@ npm run test:watch
 ### 集成测试
 
 ```bash
-# 测试 Authing 集成
-cd scripts
-node test-authing.js
+# 进入前端目录
+cd frontend
 
-# 测试 API 端点
-cd scripts
-./test-curl.sh
+# 测试 Authing 集成
+node test-user-info.mjs
+
+# 测试 API 连通性
+node test-authing-api.mjs
+
+# 测试用户名格式
+node test-username-formats.mjs
 ```
+
+### 测试文件说明
+
+- **`test-username-formats.mjs`** - 测试不同的用户名格式，找到正确的登录方式
+- **`test-authing-api.mjs`** - 测试 Authing API 连通性，确认服务状态
+- **`test-user-info.mjs`** - 完整的前后端集成测试，验证整个流程
+- **`test-with-env.mjs`** - 环境变量配置示例和验证
 
 ## 🚀 部署
 

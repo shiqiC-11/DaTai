@@ -108,7 +108,7 @@ func main() {
 	port := getEnv("PORT", "8080")
 	authMiddleware := middleware.NewAuthingMiddleware(
 		getEnv("AUTHING_JWKS_URL", ""),
-		getEnv("AUTHING_AUDIENCE", ""),
+		getEnv("AUTHING_APP_ID", ""),
 		getEnv("AUTHING_ISSUER", ""),
 	)
 
