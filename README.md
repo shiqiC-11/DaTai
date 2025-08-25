@@ -1,4 +1,4 @@
-# DaTai - 全栈微服务项目
+# DaTai - cursor practice
 
 一个基于 Go + GraphQL + PostgreSQL + React 的现代化全栈项目，集成 Authing 身份认证。
 
